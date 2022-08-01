@@ -4,6 +4,7 @@ const Employee = require('../lib/Employee')
 //object and properties tests
 test('creates employee parent object', () => {
     const employee = new Employee()
+    
     expect(typeof(employee)).toBe("object")
 }) 
 

@@ -1,8 +1,17 @@
 //imports
-const Employee = require('../lib/Employee')
 const Manager = require('../lib/Manager')
 
-//properties test
+//property test
 test("gets manager's office number", () => {
-    const manager = new Manager()
+    const manager = new Manager(12)
+
+   expect(manager.officeNumber).toEqual(expect.any(Number)) 
 }) 
+
+//function test
+test("gets manager's role", () => {
+    const role = "Manager"
+    const manager = new Manager(role)
+
+    expect(manager.getRole()).toBe(role)
+})

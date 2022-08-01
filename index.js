@@ -1,5 +1,7 @@
+//imports
 const inquirer = require('inquirer')
 const Employee = require('./lib/Employee')
+const Manager = require('./lib/Manager')
 
 const promptUser = () => {
     return inquirer.prompt([
