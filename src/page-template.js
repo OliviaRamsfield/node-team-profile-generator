@@ -1,17 +1,25 @@
-const generateEmployeeCard = employeeInfo => {
+const generateEmployeeCard = employeeArray => {
     //write HTML for each employee card below
     return `
-    <div class="card" style="width: 18rem;">
-        <div class="card-header">ROLE HERE</div>
-        <p>ROLE HERE</p>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">ID HERE</li>
-            <li class="list-group-item">EMAIL HERE</li>
-            <li class="list-group-item">SOMETHING ELSE</li>
-
-    </div>
-    `; 
-}
+    <div class="card" style="width: 18rem;">`
+            &{employeeArray
+                .filter(({ role }) => role)
+                .map(({ role, name, id, email, officeNumber, school, github }) => {
+                    return `
+                    <div class="card-header">${name}
+                    <i>SOMETHING??</i><p>${role}</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">${id}</li>
+                        <li class="list-group-item">${email}</li>
+                        <li class="list-group-item">${school}</li>
+                        <li class="list-group-item">${officeNumber}</li>
+                        <a href="https://github.com/${github}>${github}</a>
+                        </div>
+                        </div>
+                        `;
+                })
+                .join('')}
+    }
 
 //make the HTML into a string template (template literal)
 module.exports = templateData => {
@@ -29,7 +37,7 @@ module.exports = templateData => {
         <title>Meet the Team</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Public+Sans:300i,300,500&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="../src/styles.css">
     </head>
 
     <body>
@@ -40,7 +48,7 @@ module.exports = templateData => {
         </header>
 
         <main>
-        ${generateEmployeeCard(employeeInfo)}
+        ${generateEmployeeCard(employeeArray)}
         </main>
         <footer>
             <h3>&copy; ${new Date().getFullYear()} by Olivia Ramsfield</h3>
