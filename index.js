@@ -4,8 +4,13 @@ const Employee = require('./lib/Employee')
 const Manager = require('./lib/Manager')
 const Intern = require('./lib/Intern')
 const Engineer = require('./lib/Engineer')
+const fs = require("fs")
+const generatePage = require("./src/page-template")
 
-const promptUser = () => {
+const promptUser = employeeData => {
+    if (!employeeData) {
+        employeeData = []
+    }
     return inquirer.prompt([
      {
         type: 'text',
@@ -65,7 +70,7 @@ const promptUser = () => {
         }
     },
     {
-        type: 'confrim',
+        type: 'confirm',
         name: 'confirmEngineer',
         message: 'Is this employee an Engineer?',
         default: true
@@ -74,8 +79,8 @@ const promptUser = () => {
         type: 'input',
         name: 'engineer',
         message: "What is the engineer's GitHub username?",
-        when: ({ confrimEngineer }) => {
-            if (confrimEngineer) {
+        when: ({ confirmEngineer }) => {
+            if (confirmEngineer) {
                 return true
             } else {
                 return false
@@ -92,8 +97,8 @@ const promptUser = () => {
         type: 'input',
         name: 'intern',
         message: 'Where does your intern attend school?',
-        when: ({ confrimIntern }) => {
-            if (confrimIntern) {
+        when: ({ confirmIntern }) => {
+            if (confirmIntern) {
                 return true
             } else {
                 return false
@@ -106,14 +111,22 @@ const promptUser = () => {
         message: 'Would you like to add another employee?',
         default: true
     }
-    ])
-
-    .then(({ name, id, email }) => {
-    this.name = new Employee(name)
-    this.id = id
-    this.email = email
+    ]).then(employeeData => {
+        if (employeeData.addNewEmployee === true) {
+            return promptUser(employeeData)
+        } else {
+            return employeeData
+        }
     })
 }
 
 promptUser()
-    .then(em)
+    .then(employeeData => {
+        return fs.writeFile("./dist/index.html", generatePage(employeeData), function(err) {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log("Check out your team!")
+            }
+        })
+    })

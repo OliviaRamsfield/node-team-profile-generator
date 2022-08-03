@@ -18,24 +18,24 @@ const generateMangerCard = manager => {
 
 const generateEngineerCard = engineer => {
     return `
-    <div class="card-header">${Employee.name}
-    <i class="fa-solid fa-laptop-code"></i><h4>${Engineer.getRole}</h4>
+    <div class="card-header">${employee.name}
+    <i class="fa-solid fa-laptop-code"></i><h4>${engineer.getRole}</h4>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">ID:${Employee.id}</li>
-        <li class="list-group-item">Email:${Employee.email}</li>
-        <a href="https://github.com/${Engineer.github}>${Engineer.github}</a>
+        <li class="list-group-item">ID:${employee.id}</li>
+        <li class="list-group-item">Email:${employee.email}</li>
+        <a href="https://github.com/${engineer.github}>${engineer.github}</a>
     </ul>
 </div>
     `}
 
 const generateInternCard = intern => {
     return `
-    <div class="card-header">${Employee.name}
-    <i class="fa-solid fa-cup-togo"></i><h4>${Intern.getRole}</h4>
+    <div class="card-header">${employee.name}
+    <i class="fa-solid fa-cup-togo"></i><h4>${intern.getRole}</h4>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">ID:${Employee.id}</li>
-        <li class="list-group-item">Email:${Employee.email}</li>
-        <li class="list-group-item">Office Number:${Intern.school}</li>
+        <li class="list-group-item">ID:${employee.id}</li>
+        <li class="list-group-item">Email:${employee.email}</li>
+        <li class="list-group-item">Office Number:${intern.school}</li>
     </ul>
 </div>
     `}
@@ -62,10 +62,7 @@ const generateEmployeeCards = employeeArray => {
 }
 
 //make the HTML into a string template (template literal)
-module.exports = templateData => {
-    console.log(templateData)
-
-    //destructure objects below:
+module.exports = employeeHtml => {
 
     return `
     <!DOCTYPE html>
@@ -88,7 +85,7 @@ module.exports = templateData => {
 
         <main>
             <div class="card" style="width: 18rem;">
-                ${generateEmployeeCards(employeeArray)}
+                ${generateEmployeeCards(employeeHtml)}
             </div>
         </main>
         <footer>
