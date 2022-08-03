@@ -115,4 +115,5 @@ const promptUser = () => {
     })
 }
 
-promptUser();
+promptUser()
+    .then(em)

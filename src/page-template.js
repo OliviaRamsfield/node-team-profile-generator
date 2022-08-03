@@ -1,25 +1,65 @@
-const generateEmployeeCard = employeeArray => {
-    //write HTML for each employee card below
+const Employee = require("../lib/Employee");
+const Manager = require("../lib/Manager")
+const Engineer = require("../lib/Engineer")
+const Intern = require("../lib/Intern")
+
+//write HTML for each employee card below
+const generateMangerCard = manager => {
     return `
-    <div class="card" style="width: 18rem;">`
-            &{employeeArray
-                .filter(({ role }) => role)
-                .map(({ role, name, id, email, officeNumber, school, github }) => {
-                    return `
-                    <div class="card-header">${name}
-                    <i>SOMETHING??</i><p>${role}</p>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">${id}</li>
-                        <li class="list-group-item">${email}</li>
-                        <li class="list-group-item">${school}</li>
-                        <li class="list-group-item">${officeNumber}</li>
-                        <a href="https://github.com/${github}>${github}</a>
-                        </div>
-                        </div>
-                        `;
-                })
-                .join('')}
-    }
+    <div class="card-header">${employee.name}
+    <i class="fa-solid fa-glasses-round"></i><h4>${manager.getRole}</h4>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">ID:${employee.id}</li>
+            <li class="list-group-item">Email:${employee.email}</li>
+            <li class="list-group-item">Office Number:${manager.officeNumber}</li>
+        </ul>
+    </div>
+    `}
+
+const generateEngineerCard = engineer => {
+    return `
+    <div class="card-header">${Employee.name}
+    <i class="fa-solid fa-laptop-code"></i><h4>${Engineer.getRole}</h4>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">ID:${Employee.id}</li>
+        <li class="list-group-item">Email:${Employee.email}</li>
+        <a href="https://github.com/${Engineer.github}>${Engineer.github}</a>
+    </ul>
+</div>
+    `}
+
+const generateInternCard = intern => {
+    return `
+    <div class="card-header">${Employee.name}
+    <i class="fa-solid fa-cup-togo"></i><h4>${Intern.getRole}</h4>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">ID:${Employee.id}</li>
+        <li class="list-group-item">Email:${Employee.email}</li>
+        <li class="list-group-item">Office Number:${Intern.school}</li>
+    </ul>
+</div>
+    `}
+
+const generateEmployeeCards = employeeArray => {
+    let employeeHtml = []
+
+    employeeHtml.push(employeeArray
+        .filter(employee => employee.getRole() === 'Manager')
+        .map(manager => generateMangerCard(manager))
+        .join(''))
+
+    employeeHtml.push(employeeArray
+        .filter(employee => employee.getRole()=== 'Engineeer')
+        .map(engineer => generateEngineerCard(engineer))
+        .join(''))
+
+    employeeHtml.push(employeeArray
+        .filter(employee => employee.getRole() === 'Intern')
+        .map(intern => generateInternCard(intern))
+        .join(''))
+
+    return employeeHtml.join('')
+}
 
 //make the HTML into a string template (template literal)
 module.exports = templateData => {
@@ -37,7 +77,6 @@ module.exports = templateData => {
         <title>Meet the Team</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Public+Sans:300i,300,500&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="../src/styles.css">
     </head>
 
     <body>
@@ -48,7 +87,9 @@ module.exports = templateData => {
         </header>
 
         <main>
-        ${generateEmployeeCard(employeeArray)}
+            <div class="card" style="width: 18rem;">
+                ${generateEmployeeCards(employeeArray)}
+            </div>
         </main>
         <footer>
             <h3>&copy; ${new Date().getFullYear()} by Olivia Ramsfield</h3>
