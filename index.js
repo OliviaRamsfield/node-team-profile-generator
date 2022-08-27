@@ -5,17 +5,19 @@ const Manager = require('./lib/Manager')
 const Intern = require('./lib/Intern')
 const Engineer = require('./lib/Engineer')
 const fs = require("fs")
-const generatePage = require("./src/page-template")
+const generatePage = require("./src/page-template.js")
 
-const promptUser = employeeData => {
-    if (!employeeData) {
-        employeeData = []
-    }
-    return inquirer.prompt([
+
+const employeeData = []
+function promptUser () {
+
+const promptManager = () => {
+
+    inquirer.prompt([
      {
         type: 'text',
-        name: 'name',
-        message: "What is the employee's name? (Required)",
+        name: 'managerName',
+        message: "What is the manager's name? (Required)",
         validate: nameInput => {
             if (nameInput) {
                 return true
@@ -28,7 +30,7 @@ const promptUser = employeeData => {
      {
         type: 'text',
         name: 'id',
-        message: "What is the employee's id number? (Required)",
+        message: "What is the manager's id number? (Required)",
         validate: idInput => {
             if (idInput) {
                 return true
@@ -41,7 +43,7 @@ const promptUser = employeeData => {
      {
         type: 'text',
         name: 'email',
-        message: "What is the employee's email?",
+        message: "What is the manager's email?",
         validate: emailInput => {
             if (emailInput) {
                 return true
@@ -52,81 +54,160 @@ const promptUser = employeeData => {
         }
     },
     {
-        type: 'confirm',
-        name: 'confirmManager',
-        message: 'Is this employee a Manager?',
-        default: true
-    },
-    {
         type: 'input',
-        name: 'manager',
-        message: "What is the manager's office number?",
-        when: ({ confirmManager }) => {
-            if (confirmManager) {
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        type: 'confirm',
-        name: 'confirmEngineer',
-        message: 'Is this employee an Engineer?',
-        default: true
-    },
-    {
-        type: 'input',
-        name: 'engineer',
-        message: "What is the engineer's GitHub username?",
-        when: ({ confirmEngineer }) => {
-            if (confirmEngineer) {
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        type: 'confirm',
-        name: 'confirmIntern',
-        message: 'Is this employee an Intern?',
-        default: true
-    },
-    {
-        type: 'input',
-        name: 'intern',
-        message: 'Where does your intern attend school?',
-        when: ({ confirmIntern }) => {
-            if (confirmIntern) {
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        type: 'confirm',
-        name: 'addNewEmployee',
-        message: 'Would you like to add another employee?',
-        default: true
-    }
-    ]).then(employeeData => {
-        if (employeeData.addNewEmployee === true) {
-            return promptUser(employeeData)
-        } else {
-            return employeeData
+        name: 'managerNumber',
+        message: "What is the manager's office number?"
+    }]).then(data => {
+        const manager = new Manager(data.managerName, data.id, data.email, data.managerNumber)
+        employeeData.push(manager)
+        continueTeam()
+    })
+}
+const continueTeam = () => {
+    inquirer.prompt([{
+        type: 'list',
+        name: 'addNewMember',
+        message: 'Would you like to add another member?',
+        choices: ['Engineer', 'Intern', 'All done']
+    }]).then(data => {
+        switch (data.addNewMember) {
+            case "Engineer": 
+            createEngineer()
+            break;
+            case 'Intern':
+                createIntern()
+                break;
+                default: writeTeam()
         }
     })
 }
+    const createEngineer = () => {
+        inquirer.prompt([{
+            
+                type: 'text',
+                name: 'name',
+                message: "What is the enigneer's name? (Required)",
+                validate: nameInput => {
+                    if (nameInput) {
+                        return true
+                    } else {
+                        console.log('Please enter a name.')
+                        return false
+                    }
+                }
+             },
+             {
+                type: 'text',
+                name: 'id',
+                message: "What is the engineer's id number? (Required)",
+                validate: idInput => {
+                    if (idInput) {
+                        return true
+                    } else {
+                        console.log('Please enter their id number.')
+                        return false
+                    }
+                }
+             },
+             {
+                type: 'text',
+                name: 'email',
+                message: "What is the engineer's email?",
+                validate: emailInput => {
+                    if (emailInput) {
+                        return true
+                    } else {
+                        console.log('Please enter their email address.')
+                        return false
+                    }
+                }
+            },
+    {
+        type: 'input',
+        name: 'github',
+        message: "What is the engineer's GitHub username?"
+    }
+        ]).then(data => {
+            const engineer = new Engineer(data.name, data.id, data.email, data.github)
+            employeeData.push(engineer)
+            continueTeam()
+        })
+    }
+ const createIntern = () => {
+     inquirer.prompt([{
+        type: 'text',
+        name: 'name',
+        message: "What is the intern's name? (Required)",
+        validate: nameInput => {
+            if (nameInput) {
+                return true
+            } else {
+                console.log('Please enter a name.')
+                return false
+            }
+        }
+     },
+     {
+        type: 'text',
+        name: 'id',
+        message: "What is the intern's id number? (Required)",
+        validate: idInput => {
+            if (idInput) {
+                return true
+            } else {
+                console.log('Please enter their id number.')
+                return false
+            }
+        }
+     },
+     {
+        type: 'text',
+        name: 'email',
+        message: "What is the intern's email?",
+        validate: emailInput => {
+            if (emailInput) {
+                return true
+            } else {
+                console.log('Please enter their email address.')
+                return false
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'school',
+        message: 'Where does your intern attend school?'
+     }]).then(data => {
+        console.log('data ', employeeData)
+        const intern = new Intern(data.name, data.id, data.email, data.school)
+        employeeData.push(intern)
+        continueTeam()
+    })
+}
 
-promptUser()
-    .then(employeeData => {
-        return fs.writeFile("./dist/index.html", generatePage(employeeData), function(err) {
+
+
+//this was just added
+    // .then(employeeData => {
+    //     console.log("employee data ", employeeData)
+        
+    //     console.log(employeeInfo)
+        
+    //     console.log("employee data ", employeeData)
+    //     return employeeData
+    // })
+function writeTeam() {
+    console.log("This is here")
+         fs.writeFileSync("./dist/index.html", generatePage(employeeData), function(err) {
+             console.log("This is here also")
             if (err) {
-                console.log(err)
+                throw err
             } else {
                 console.log("Check out your team!")
             }
         })
-    })
+    }
+    promptManager()
+}
+
+    promptUser()
